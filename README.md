@@ -16,7 +16,7 @@
 | [Fire suppression system with heat-based leak detection](https://veer-sanghvi.github.io/#fire-suppression) | Designed during my internship at Nitin Fire Protection; full assembly model and manufacturing drawings in SolidWorks. | The parent company filed a patent on the design. Details under NDA. |
 | [High-Speed Wobbler Engine](https://github.com/Veer-Sanghvi/wobbler-engine) | Air-powered single-cylinder oscillating engine; sand casting, machining, and tolerance analysis. | Stable operation at 2,340 RPM. |
 | [X-FLEX Terrain-Capable Compact Lift](https://veer-sanghvi.github.io/xflex) | Remote-controlled scissor lift for load transport on uneven terrain; I lead the Arduino-based control development. | Capstone in progress. |
-| [ASME IAM3D R.O.V.E.R](https://veer-sanghvi.github.io/rover) | 3D-printed remote-controlled ground vehicle; I worked on body frames and structural components. | 5th place at the ASME competition. |
+| [ASME IAM3D R.O.V.E.R](https://veer-sanghvi.github.io/rover) | Remote-operated excavation vehicle for ASME's additive manufacturing challenge; I worked on the design, 3D printing, and assembly of the body frames and structural components. | 5th place at the ASME EFx competition. |
 
 ### Background
 
