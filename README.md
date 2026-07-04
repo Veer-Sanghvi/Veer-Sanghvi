@@ -1,11 +1,18 @@
-<h3 align="center">Mechanical Engineering student at Wentworth Institute of Technology, Boston.</h3>
-<h4 align="center">Fire safety QA, manufacturing, and hardware controls. Seeking a Fall 2026 mechanical engineering co-op.</h4>
+### Hi there 👋
 
-<p align="center">
-  <a href="https://veer-sanghvi.github.io"><img src="https://img.shields.io/badge/Portfolio-veer--sanghvi.github.io-2ea44f?style=for-the-badge" alt="Portfolio"/></a>
-  <a href="https://www.linkedin.com/in/veer-sanghvi/"><img src="https://img.shields.io/badge/LinkedIn-veer--sanghvi-0a66c2?style=for-the-badge&logo=linkedin" alt="LinkedIn"/></a>
-  <a href="mailto:veersan25@gmail.com"><img src="https://img.shields.io/badge/Email-veersan25%40gmail.com-d14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/></a>
-</p>
+Hi, I'm Veer
+
+Mechanical Engineering student at Wentworth Institute of Technology, Boston
+
+Designed a fire suppression system with heat-based leak detection during an internship; the company's parent filed a patent on it
+
+Building and machining hardware: a wobbler engine that runs at 2,340 RPM, a remote-controlled terrain-adaptive scissor lift, and a 3D-printed rover for ASME's IAM3D challenge
+
+Seeking a Fall 2026 mechanical engineering co-op
+
+Reach me via [LinkedIn](https://www.linkedin.com/in/veer-sanghvi/) or [email](mailto:veersan25@gmail.com)
+
+Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https://github.com/Veer-Sanghvi/wobbler-engine)
 
 ---
 
