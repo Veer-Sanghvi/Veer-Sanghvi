@@ -1,10 +1,10 @@
-### Hi there 👋
+<h3 align="center">Hi there 👋</h3>
 
 Hi, I'm Veer
 
 Mechanical Engineering student at Wentworth Institute of Technology, Boston
 
-Designed a fire suppression system with heat-based leak detection during an internship; the company's parent filed a patent on it
+Designed a fire suppression system with heat-based leak detection during an internship (NDA, company not disclosed); the parent company filed a patent on it
 
 Building and machining hardware: a wobbler engine that runs at 2,340 RPM, a remote-controlled terrain-adaptive scissor lift, and a 3D-printed rover for ASME's IAM3D challenge
 
@@ -20,7 +20,7 @@ Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https
 
 | Project | What it is | Result |
 |---|---|---|
-| [Fire suppression system with heat-based leak detection](https://veer-sanghvi.github.io/#fire-suppression) | Designed during my internship at Nitin Fire Protection; full assembly model and manufacturing drawings in SolidWorks. | The parent company filed a patent on the design. Details under NDA. |
+| [Fire suppression system with heat-based leak detection](https://veer-sanghvi.github.io/#fire-suppression) | Designed during an internship (NDA — company not disclosed); full assembly model and manufacturing drawings in SolidWorks. | The parent company filed a patent on the design. Details under NDA. |
 | [High-Speed Wobbler Engine](https://github.com/Veer-Sanghvi/wobbler-engine) | Air-powered single-cylinder oscillating engine; sand casting, machining, and tolerance analysis. | Stable operation at 2,340 RPM. |
 | [X-FLEX Terrain-Capable Compact Lift](https://veer-sanghvi.github.io/xflex) | Remote-controlled scissor lift for load transport on uneven terrain; I lead the Arduino-based control development. | Capstone in progress. |
 | [ASME IAM3D R.O.V.E.R](https://veer-sanghvi.github.io/rover) | Remote-operated excavation vehicle built by WIT's ASME club team for ASME's additive manufacturing challenge; I helped with the 3D-printed body frames and structural components. | The team placed 5th at the ASME EFx competition. |
