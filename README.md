@@ -1,18 +1,22 @@
 <h3 align="center">Hi there 👋</h3>
 
-Hi, I'm Veer
+<p align="center">
+Mechanical Engineering student at Wentworth Institute of Technology, Boston. Currently on a Manufacturing & Operations Co-op at Moveras, LLC. Seeking a Spring 2027 co-op next.
+</p>
 
-Mechanical Engineering student at Wentworth Institute of Technology, Boston
+<h3 align="center"><code>veer@github ~ $ whoami</code></h3>
 
-Designed a fire suppression system with heat-based leak detection during an internship (NDA, company not disclosed); the parent company filed a patent on it
+<p align="center">
+  <img src="info-card.svg" alt="veer info card" width="45%"/>
+</p>
 
-Building and machining hardware: a wobbler engine that runs at 2,340 RPM, a remote-controlled terrain-adaptive scissor lift, and a 3D-printed rover for ASME's IAM3D challenge
+Designed a fire suppression system with heat-based leak detection during an internship (NDA, company not disclosed); the parent company filed a patent on it.
 
-Seeking a Fall 2026 mechanical engineering co-op
+Building and machining hardware: a wobbler engine that runs at 2,340 RPM, a remote-controlled terrain-adaptive scissor lift, and a 3D-printed rover for ASME's IAM3D challenge.
 
-Reach me via [LinkedIn](https://www.linkedin.com/in/veer-sanghvi/) or [email](mailto:veersan25@gmail.com)
+Reach me via [LinkedIn](https://www.linkedin.com/in/veer-sanghvi/) or [email](mailto:veersan25@gmail.com).
 
-Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https://github.com/Veer-Sanghvi/wobbler-engine)
+Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https://github.com/Veer-Sanghvi/wobbler-engine).
 
 ---
 
@@ -44,6 +48,10 @@ Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https
   <img src="https://img.shields.io/badge/3D%20Printing-4a4a4a?style=flat-square" alt="3D Printing"/>
 </p>
 
+<h3 align="center"><code>veer@github ~ $ ./contributions.sh</code></h3>
+
 <p align="center">
-  <img height="150px" src="https://github-readme-stats.vercel.app/api?username=Veer-Sanghvi&hide_title=true&show_icons=true&theme=default" alt="GitHub stats"/>
+  <img src="contrib-heatmap.svg" alt="contribution heatmap"/>
 </p>
+
+<sub>Contribution heatmap refreshes daily via <a href=".github/workflows/update-profile-art.yml">GitHub Actions</a>, scraped from the public contributions calendar (no token required).</sub>
