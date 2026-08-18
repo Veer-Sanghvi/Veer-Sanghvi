@@ -31,7 +31,7 @@ ROWS = [
     ("seeking", "Spring 2027 ME Co-op (CPT)"),
     ("stack", "SolidWorks - MATLAB/Simscape - Python - Arduino - PLC"),
     ("patent", "Fire suppression, heat-based leak detection (filed)"),
-    ("building", "X-FLEX remote-controlled terrain-adaptive scissor lift"),
+    ("built", "X-FLEX remote-controlled terrain-adaptive scissor lift"),
     ("links", "veer-sanghvi.github.io - linkedin.com/in/veer-sanghvi"),
 ]
 
