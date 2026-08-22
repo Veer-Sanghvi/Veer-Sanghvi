@@ -16,10 +16,10 @@ LABEL = "#39d353"
 VALUE = "#c9d1d9"
 MUTED = "#8b949e"
 
-VALUE_X = 150
-LINE_H = 20
-TOP_PAD = 54
-CHAR_W = 7.9  # approx monospace advance width at 13px
+VALUE_X = 175
+LINE_H = 26
+TOP_PAD = 66
+CHAR_W = 10.0  # generous monospace advance width at 16px, covers wide fallback fonts
 
 # label, value -- kept in sync with PROFILE.md / CLAUDE.md identity, no
 # employer named for the patent line per the NDA constraint, X-FLEX stays
@@ -47,7 +47,7 @@ def esc(s):
 def render():
     height = TOP_PAD + len(ROWS) * LINE_H + 20
     longest_value = max(len(v) for _, v in ROWS)
-    width = int(VALUE_X + longest_value * CHAR_W + 24)
+    width = int(VALUE_X + longest_value * CHAR_W + 36)
 
     lines = []
     for i, (label, value) in enumerate(ROWS):
@@ -74,9 +74,9 @@ def render():
 
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" font-family="'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace">
   <style>
-    .label {{ fill: {LABEL}; font-size: 13px; font-weight: 600; }}
-    .value {{ fill: {VALUE}; font-size: 13px; }}
-    .title {{ fill: {MUTED}; font-size: 12px; }}
+    .label {{ fill: {LABEL}; font-size: 16px; font-weight: 600; }}
+    .value {{ fill: {VALUE}; font-size: 16px; }}
+    .title {{ fill: {MUTED}; font-size: 13px; }}
     .dot {{ opacity: 0.9; }}
   </style>
   <rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="10" ry="10" fill="{BG}" stroke="{BORDER}"/>
