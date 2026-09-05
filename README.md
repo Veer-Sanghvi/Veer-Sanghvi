@@ -27,7 +27,7 @@ Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https
 | [Fire suppression system with heat-based leak detection](https://veer-sanghvi.github.io/#fire-suppression) | Designed during an internship (NDA, company not disclosed); full assembly model and manufacturing drawings in SolidWorks. | The parent company filed a patent on the design. Details under NDA. |
 | [High-Speed Wobbler Engine](https://github.com/Veer-Sanghvi/wobbler-engine) | Air-powered single-cylinder oscillating engine; sand casting, machining, and tolerance analysis. | Stable operation at 2,340 RPM. |
 | [X-FLEX Terrain-Capable Compact Lift](https://veer-sanghvi.github.io/xflex) | Remote-controlled scissor lift for load transport on uneven terrain; I worked on the Arduino-based control development with the 6-person team. | Completed; presented at Wentworth's Senior Capstone Showcase. |
-| [ASME IAM3D R.O.V.E.R](https://veer-sanghvi.github.io/rover) | Remote-operated excavation vehicle built by WIT's ASME club team for ASME's additive manufacturing challenge; I helped with the 3D-printed body frames and structural components. | The team placed 5th at the ASME EFx competition. |
+| [ASME IAM3D R.O.V.E.R](https://veer-sanghvi.github.io/rover) | Remote-operated excavation vehicle built by WIT's ASME club team for ASME's additive manufacturing challenge; as one of the seniors on a team of sophomores and juniors, I floated across the movement, manipulator, and frame subsystems. | The team placed 5th at the ASME EFx competition. |
 | [IQCR: Inspection & Quality Control Robots](https://veer-sanghvi.github.io/IQCR/) | Kinematic feasibility study for a 6-axis robot arm combining camera, depth sensor, and laser probe for in-line inspection; live 3D solver demo in the browser. | Accepted, IEEE ICACR 2026 (Nanjing, China, Oct 2026). |
 | [pressfit](https://github.com/Veer-Sanghvi/pressfit) | ISO 286 limits and fits from the terminal; zero dependencies, and the test suite is built from published fit-table rows. | Live on [PyPI](https://pypi.org/project/pressfit/): pip install pressfit. |
 | [guzzler](https://github.com/Veer-Sanghvi/guzzler) | Fuel consumption model with LightGBM monotone constraints, so it cannot predict a heavier car burning less fuel. | Beats the linear baseline on 18 of 20 splits; the physics guarantee costs about 6 percent accuracy. |
@@ -35,8 +35,8 @@ Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https
 
 ### Background
 
-- Executed 50+ QA tests (pressure, leak, reliability) to IS, UL, and FM standards across two roles in fire safety manufacturing.
-- Managed inventory of 500+ fire-safety SKUs across two factory floors at Eurotech Cylinders.
+- Ran 50+ pressure, leak, and reliability tests to IS, UL, and FM standards across two roles in fire protection manufacturing.
+- Managed inventory of 500+ fire-protection SKUs across two factory floors at Eurotech Cylinders.
 - Built and tuned LightGBM models in Python on automotive and supply-chain datasets at Corizo.
 
 ### Tools
