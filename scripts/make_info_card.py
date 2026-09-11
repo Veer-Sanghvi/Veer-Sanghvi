@@ -29,7 +29,7 @@ ROWS = [
     ("role", "ME Senior, Wentworth Institute of Technology"),
     ("now", "Manufacturing & Operations Co-op @ Moveras (Aug-Dec 2026)"),
     ("seeking", "Spring 2027 ME Co-op (CPT)"),
-    ("stack", "SolidWorks - MATLAB/Simscape - Python - Arduino - PLC"),
+    ("stack", "SolidWorks - Fusion 360 - MATLAB/Simscape - Python - Arduino - PLC"),
     ("patent", "Fire suppression, heat-based leak detection (filed)"),
     ("built", "X-FLEX remote-controlled terrain-adaptive scissor lift"),
     ("links", "veer-sanghvi.github.io - linkedin.com/in/veer-sanghvi"),

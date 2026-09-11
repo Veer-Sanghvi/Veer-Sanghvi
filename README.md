@@ -43,6 +43,7 @@ Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https
 
 <p>
   <img src="https://img.shields.io/badge/SolidWorks-CB0000?style=flat-square" alt="SolidWorks"/>
+  <img src="https://img.shields.io/badge/Fusion_360-FF6B00?style=flat-square" alt="Fusion 360"/>
   <img src="https://img.shields.io/badge/AutoCAD-E51050?style=flat-square" alt="AutoCAD"/>
   <img src="https://img.shields.io/badge/Inventor-F7961E?style=flat-square" alt="Inventor"/>
   <img src="https://img.shields.io/badge/MATLAB%2FSimulink-e86e00?style=flat-square" alt="MATLAB"/>
