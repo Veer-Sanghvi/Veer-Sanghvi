@@ -1,7 +1,7 @@
 <h3 align="center">Hi there 👋</h3>
 
 <p align="center">
-Mechanical Engineering student at Wentworth Institute of Technology, Boston. Currently on a Manufacturing & Operations Co-op at Moveras, LLC. Seeking a Spring 2027 co-op next.
+Mechanical Engineering student at Wentworth Institute of Technology, Boston. Currently on a Manufacturing & Operations Co-op at Moveras, LLC.
 </p>
 
 <h3 align="center"><code>veer@github ~ $ whoami</code></h3>

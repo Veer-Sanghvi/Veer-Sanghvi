@@ -28,7 +28,6 @@ ROWS = [
     ("user", "veer@wentworth"),
     ("role", "ME Senior, Wentworth Institute of Technology"),
     ("now", "Manufacturing & Operations Co-op @ Moveras (Aug-Dec 2026)"),
-    ("seeking", "Spring 2027 ME Co-op (CPT)"),
     ("stack", "SolidWorks - Fusion 360 - MATLAB/Simscape - Python - Arduino - PLC"),
     ("patent", "Fire suppression, heat-based leak detection (filed)"),
     ("built", "X-FLEX remote-controlled terrain-adaptive scissor lift"),
