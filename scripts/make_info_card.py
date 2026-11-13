@@ -9,12 +9,12 @@ from pathlib import Path
 OUT_PATH = Path(__file__).resolve().parent.parent / "info-card.svg"
 STATIC = os.environ.get("STATIC") == "1"
 
-BG = "#0d1117"
-BORDER = "#30363d"
-TITLE_BG = "#161b22"
-LABEL = "#39d353"
-VALUE = "#c9d1d9"
-MUTED = "#8b949e"
+BG = "#0B0B0C"
+BORDER = "#2A2A2D"
+TITLE_BG = "#141415"
+LABEL = "#C6F432"
+VALUE = "#FFFFFF"
+MUTED = "#A3A3A6"
 
 VALUE_X = 175
 LINE_H = 26
