@@ -1,0 +1,113 @@
+<!doctype html>
+<!-- Source scene for assets/readme/banner.png (1280x400).
+     Render: NODE_PATH=<node_modules with playwright> node render.js
+     Three of the projects on one studio floor: the IQCR ABB IRB 120 arm
+     (arm-model.js + kinematics.js, copied from the IQCR repo), the HEFP
+     exhaust manifold (hefp-model.js) and the wobbler engine
+     (wobbler-model.js, modelled in inches from the machining reports). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Veer Sanghvi banner</title>
+<link rel="stylesheet" href="overlay.css">
+<style>
+#host{background:
+  radial-gradient(45% 70% at 62% 55%, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%),
+  radial-gradient(30% 30% at 60% 100%, rgba(198,244,50,0.05) 0%, rgba(198,244,50,0) 100%), #0B0B0C;}
+.copy{width:330px;}
+h1{font-size:44px;}
+</style>
+</head>
+<body>
+<div id="host"><canvas></canvas></div>
+<div class="frame"></div>
+<svg class="overlay" id="svg"></svg>
+<div class="tags" id="tags"></div>
+<div class="copy">
+  <p class="kicker">Mechanical engineering &middot; WIT</p>
+  <h1>Veer Sanghvi</h1>
+  <p class="sub">Machined hardware, robot kinematics and thermal models.<br>Two conference papers, one patent filing, one engine that runs.</p>
+</div>
+<div class="titleblock">
+  <div><span>Sheet</span><b>PROFILE</b></div>
+  <div><span>Projects</span><b>IQCR &middot; HEFP &middot; WOBBLER</b></div>
+  <div><span>Units</span><b>MM &middot; IN</b></div>
+  <div><span>Drawn by</span><b>V. SANGHVI</b></div>
+</div>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three-0.160.0/three.module.min.js", "three/addons/": "./addons/" } }
+</script>
+<script src="kinematics.js"></script>
+<script type="module">
+import * as THREE from "three";
+import { W, H, makeRenderer, makeStudio, makeFloor, project, leader } from "./annotate.js";
+import { buildArm, jointAnchors } from "./arm-model.js";
+import { buildManifold } from "./hefp-model.js";
+import { buildWobbler } from "./wobbler-model.js";
+
+const host = document.getElementById("host");
+const renderer = makeRenderer(host.querySelector("canvas"));
+renderer.toneMappingExposure = 1.0;
+const scene = new THREE.Scene();
+makeStudio(renderer, scene, 2.2);
+makeFloor(scene, 30, 0.5, 16);
+
+// IQCR arm: modelled in mm with z up; here 1 unit = 1 in, y up
+const K = window.IQCR_KIN;
+const arm = buildArm(K);
+const q = [0.35, 0.62, -0.28, 0.2, 1.08, 0.1];
+const { frames } = K.fkChain(q);
+arm.update(frames);
+arm.glow.material.opacity = 0.6;
+arm.cone.material.opacity = 0.09;
+const armRig = new THREE.Group();
+armRig.add(arm.group);
+armRig.rotation.x = -Math.PI / 2;
+armRig.rotation.z = 0.0;
+const armMount = new THREE.Group();
+armMount.add(armRig);
+armMount.scale.setScalar(0.0062);
+armMount.position.set(0.9, 0, 0.4);
+armMount.rotation.y = -0.35;
+scene.add(armMount);
+
+// HEFP manifold, hung on the left with the ports toward the lens
+const man = buildManifold();
+const manRig = new THREE.Group();
+manRig.add(man.group);
+manRig.scale.setScalar(0.72);
+manRig.rotation.set(0.1, 0.55, 0);
+manRig.position.set(-3.6, 2.5, 0.2);
+scene.add(manRig);
+const portGlow = new THREE.PointLight(0xff9a30, 1.6, 5, 2);
+portGlow.position.set(-3.4, 2.7, 1.2);
+scene.add(portGlow);
+
+// wobbler engine on the right
+const eng = buildWobbler(62);
+const engRig = new THREE.Group();
+engRig.add(eng.group);
+engRig.scale.setScalar(0.92);
+engRig.rotation.y = 1.15;
+engRig.position.set(6.0, 0, 0.6);
+scene.add(engRig);
+scene.updateMatrixWorld(true);
+
+const camera = new THREE.PerspectiveCamera(18, W / H, 0.1, 200);
+camera.position.set(3.6, 5.2, 24.5);
+camera.lookAt(-0.8, 1.5, 0);
+camera.updateMatrixWorld();
+
+const P = (rig, v) => project(rig.localToWorld(v.clone()), camera);
+const svg = document.getElementById("svg"), tags = document.getElementById("tags");
+await document.fonts.ready;
+const armPts = jointAnchors(frames);
+leader(svg, tags, P(man.group, man.anchors.port), 448, 60, `HEFP &middot; <b>hot-surface ignition model</b> &middot; ASTFE TFEC 2027`, "right");
+leader(svg, tags, P(armRig, armPts[3]), 1250, 48, `IQCR &middot; <b>six-axis inspection arm</b> &middot; IEEE ICACR 2026`, "left");
+leader(svg, tags, P(eng.group, eng.anchors.flywheel), 1250, 86, `WOBBLER ENGINE &middot; <b>2,340 RPM</b> &middot; 6061 Al + brass`, "left");
+
+renderer.render(scene, camera);
+document.body.dataset.ready = "1";
+</script>
+</body>
+</html>
