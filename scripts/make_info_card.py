@@ -39,7 +39,7 @@ ROWS = [
     ("next", "Plumbing & Fire Protection Co-op @ Buro Happold (Jan 2027)"),
     ("stack", "SolidWorks · Fusion 360 · MATLAB/Simscape · Python · Arduino · PLC"),
     ("patent", "Fire suppression, heat-based leak detection (filed)"),
-    ("built", "X-FLEX remote-controlled terrain-adaptive scissor lift"),
+    ("built", "X-FLEX remote-controlled scissor lift for uneven terrain"),
     ("links", "veer-sanghvi.github.io · linkedin.com/in/veer-sanghvi"),
 ]
 
