@@ -20,6 +20,11 @@ Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https
 
 ---
 
+### Publications
+
+- V. Sanghvi et al. (2026). Inspection and Quality Control Robots. IEEE ICACR 2026, Nanjing, China. [Paper PDF](https://veer-sanghvi.github.io/IQCR/conference_paper/IQCR_camera_ready_6page.pdf) and [live simulation](https://veer-sanghvi.github.io/IQCR/).
+- V. Sanghvi et al. (2027). Hot Engines and Fire Prevention. ASTFE Thermal and Fluids Engineering Conference (TFEC 2027), Dallas, TX. Accepted, to appear; [live simulation](https://veer-sanghvi.github.io/HEFP/).
+
 ### What I have built
 
 | Project | What it is | Result |
