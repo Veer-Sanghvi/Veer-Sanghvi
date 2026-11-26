@@ -84,18 +84,31 @@ function el(tag, attrs, parent) {
   return e;
 }
 
-// a mono tag at (tx, ty) (its left or right edge, by `side`) with a leader to the anchor
+// a mono tag with a leader to the anchor. side "right": tag's left edge at (tx, ty);
+// "left": its right edge; "above"/"below": tag centred on tx with a vertical leader
 export function leader(svg, tagsHost, anchor, tx, ty, html, side = "right") {
   const tag = document.createElement("div");
   tag.className = "tag"; tag.innerHTML = html;
   tagsHost.appendChild(tag);
   const r = tag.getBoundingClientRect();
-  const left = side === "right" ? tx : tx - r.width;
-  tag.style.left = left + "px"; tag.style.top = (ty - r.height / 2) + "px";
-  const x1 = side === "right" ? left - 5 : left + r.width + 5;
-  el("line", { x1, y1: ty, x2: anchor[0], y2: anchor[1], class: "leader" }, svg);
+  let left = tx, top = ty - r.height / 2, x1, y1 = ty;
+  if (side === "left") { left = tx - r.width; x1 = left + r.width + 5; }
+  else if (side === "right") { x1 = left - 5; }
+  else { left = tx - r.width / 2; top = side === "above" ? ty - r.height : ty; x1 = tx; y1 = side === "above" ? ty + 5 : ty - 5; }
+  tag.style.left = left + "px"; tag.style.top = top + "px";
+  el("line", { x1, y1, x2: anchor[0], y2: anchor[1], class: "leader" }, svg);
   el("circle", { cx: anchor[0], cy: anchor[1], r: 3.2, class: "dot" }, svg);
   return tag;
+}
+
+// one column of side tags: each at its anchor's height, pushed apart to `gap`
+// px and kept inside [lo, hi]; sorted by height so the leaders never cross
+export function column(svg, tagsHost, items, tx, side, gap = 32, lo = 40, hi = 320) {
+  items = items.slice().sort((u, v) => u[0][1] - v[0][1]);
+  const ys = items.map(([a]) => a[1]);
+  for (let i = 0; i < ys.length; i++) ys[i] = Math.max(ys[i], i ? ys[i - 1] + gap : lo);
+  for (let i = ys.length - 1; i >= 0; i--) ys[i] = Math.min(ys[i], i < ys.length - 1 ? ys[i + 1] - gap : hi);
+  return items.map(([a, html], i) => leader(svg, tagsHost, a, tx, ys[i], html, side));
 }
 
 // a linear dimension between screen points a and b, offset `off` px along the

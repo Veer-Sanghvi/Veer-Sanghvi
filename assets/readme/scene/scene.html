@@ -87,9 +87,9 @@ scene.add(portGlow);
 const eng = buildWobbler(62);
 const engRig = new THREE.Group();
 engRig.add(eng.group);
-engRig.scale.setScalar(0.92);
+engRig.scale.setScalar(0.86);
 engRig.rotation.y = 1.15;
-engRig.position.set(6.0, 0, 0.6);
+engRig.position.set(5.8, 0, 0.6);
 scene.add(engRig);
 scene.updateMatrixWorld(true);
 
@@ -102,9 +102,10 @@ const P = (rig, v) => project(rig.localToWorld(v.clone()), camera);
 const svg = document.getElementById("svg"), tags = document.getElementById("tags");
 await document.fonts.ready;
 const armPts = jointAnchors(frames);
-leader(svg, tags, P(man.group, man.anchors.port), 448, 60, `HEFP &middot; <b>hot-surface ignition model</b> &middot; ASTFE TFEC 2027`, "right");
-leader(svg, tags, P(armRig, armPts[3]), 1250, 48, `IQCR &middot; <b>six-axis inspection arm</b> &middot; IEEE ICACR 2026`, "left");
-leader(svg, tags, P(eng.group, eng.anchors.flywheel), 1250, 86, `WOBBLER ENGINE &middot; <b>2,340 RPM</b> &middot; 6061 Al + brass`, "left");
+// one short label per object, placed beside it: above the manifold, below the arm, right of the engine
+leader(svg, tags, P(man.group, man.anchors.port), 520, 120, `HEFP &middot; <b>hot-surface ignition model</b>`, "above");
+leader(svg, tags, P(armRig, new THREE.Vector3(-120, 0, 60)), 650, 306, `IQCR &middot; <b>six-axis inspection arm</b>`, "below");
+leader(svg, tags, P(eng.group, eng.anchors.pin), 1256, 213, `WOBBLER &middot; <b>2,340 RPM</b>`, "left");
 
 renderer.render(scene, camera);
 document.body.dataset.ready = "1";

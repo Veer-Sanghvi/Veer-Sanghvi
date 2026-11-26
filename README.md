@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-Mechanical Engineering student at Wentworth Institute of Technology, Boston. Currently on a Manufacturing &amp; Operations Co-op at Moveras, LLC. Co-author of two conference papers: one published at IEEE ICACR 2026, one accepted to ASTFE TFEC 2027.
+Mechanical Engineering student at Wentworth Institute of Technology, Boston. Currently on a Manufacturing &amp; Operations Co-op at Moveras, LLC. Co-author of two conference papers: one presented at IEEE ICACR 2026, one accepted to ASTFE TFEC 2027.
 </p>
 
 <p align="center">
