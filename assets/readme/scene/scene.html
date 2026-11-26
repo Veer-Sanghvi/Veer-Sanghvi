@@ -88,8 +88,8 @@ const eng = buildWobbler(62);
 const engRig = new THREE.Group();
 engRig.add(eng.group);
 engRig.scale.setScalar(0.86);
-engRig.rotation.y = 1.15;
-engRig.position.set(5.8, 0, 0.6);
+engRig.rotation.y = 0.85;
+engRig.position.set(5.6, 0, 0.4);
 scene.add(engRig);
 scene.updateMatrixWorld(true);
 
@@ -105,7 +105,7 @@ const armPts = jointAnchors(frames);
 // one short label per object, placed beside it: above the manifold, below the arm, right of the engine
 leader(svg, tags, P(man.group, man.anchors.port), 520, 120, `HEFP &middot; <b>hot-surface ignition model</b>`, "above");
 leader(svg, tags, P(armRig, new THREE.Vector3(-120, 0, 60)), 650, 306, `IQCR &middot; <b>six-axis inspection arm</b>`, "below");
-leader(svg, tags, P(eng.group, eng.anchors.pin), 1256, 213, `WOBBLER &middot; <b>2,340 RPM</b>`, "left");
+leader(svg, tags, P(eng.group, eng.anchors.cylinder), 1256, 213, `WOBBLER &middot; <b>2,340 RPM</b>`, "left");
 
 renderer.render(scene, camera);
 document.body.dataset.ready = "1";
