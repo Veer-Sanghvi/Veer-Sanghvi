@@ -12,7 +12,7 @@ Mechanical Engineering student at Wentworth Institute of Technology, Boston. Cur
 
 Designed a fire suppression system with heat-based leak detection during an internship (NDA, company not disclosed); the parent company filed a patent on it.
 
-Built and machined hardware: a wobbler engine that runs at 2,340 RPM, a remote-controlled terrain-adaptive scissor lift, and a 3D-printed rover for ASME's IAM3D challenge.
+Built and machined hardware: a wobbler engine that runs at 2,340 RPM, a remote-controlled scissor lift designed for uneven terrain, and a 3D-printed rover for ASME's IAM3D challenge.
 
 Reach me via [LinkedIn](https://www.linkedin.com/in/veer-sanghvi/) or [email](mailto:veersan25@gmail.com).
 
@@ -31,7 +31,7 @@ Here's my [portfolio](https://veer-sanghvi.github.io) and my [top project](https
 |---|---|---|
 | [Fire suppression system with heat-based leak detection](https://veer-sanghvi.github.io/#fire-suppression) | Designed during an internship (NDA, company not disclosed); full assembly model and manufacturing drawings in SolidWorks. | The parent company filed a patent on the design. Details under NDA. |
 | [High-Speed Wobbler Engine](https://github.com/Veer-Sanghvi/wobbler-engine) | Air-powered single-cylinder oscillating engine; sand casting, machining, and tolerance analysis. | Stable operation at 2,340 RPM. |
-| [X-FLEX Terrain-Capable Compact Lift](https://veer-sanghvi.github.io/xflex) | Remote-controlled scissor lift for load transport on uneven terrain; I worked on the Arduino-based control development with the 6-person team. | Completed; presented at Wentworth's Senior Capstone Showcase. |
+| [X-FLEX Compact Lift](https://veer-sanghvi.github.io/xflex) | Remote-controlled scissor lift designed for load transport on uneven terrain (outdoor terrain not yet validated); I worked on the Arduino-based control development with the 6-person team. | Completed; presented at Wentworth's Senior Capstone Showcase. |
 | [ASME IAM3D R.O.V.E.R](https://veer-sanghvi.github.io/rover) | Remote-operated excavation vehicle built by WIT's ASME club team for ASME's additive manufacturing challenge; as one of the seniors on a team of sophomores and juniors, I floated across the movement, manipulator, and frame subsystems. | The team placed 5th at the ASME EFx competition. |
 | [IQCR: Inspection & Quality Control Robots](https://veer-sanghvi.github.io/IQCR/) | Kinematic feasibility study for a 6-axis robot arm combining camera, depth sensor, and laser probe for in-line inspection; live 3D solver demo in the browser. | Accepted, IEEE ICACR 2026 (Nanjing, China, Oct 2026). |
 | [HEFP: Hot Engines & Fire Prevention](https://veer-sanghvi.github.io/HEFP/) | One-dimensional screening model of hot-surface ignition risk on an exhaust manifold wall, with a live browser solver. | Paper accepted, ASTFE TFEC 2027 (Dallas, Mar 2027). |
