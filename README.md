@@ -10,13 +10,14 @@ Mechanical Engineering student at Wentworth Institute of Technology, Boston. Cur
   <a href="https://veer-sanghvi.github.io">Portfolio</a> &nbsp;&middot;&nbsp;
   <a href="https://www.linkedin.com/in/veer-sanghvi/">LinkedIn</a> &nbsp;&middot;&nbsp;
   <a href="mailto:veersan25@gmail.com">Email</a> &nbsp;&middot;&nbsp;
+  <a href="https://orcid.org/0009-0000-0375-0702">ORCID</a> &nbsp;&middot;&nbsp;
   <a href="https://github.com/Veer-Sanghvi/wobbler-engine">Top project</a>
 </p>
 
 <h3 align="center"><code>veer@github ~ $ whoami</code></h3>
 
 <p align="center">
-  <img src="info-card.svg" alt="veer info card" width="72%"/>
+  <img src="info-card.svg" alt="Terminal-style card: role, Moveras co-op now, Buro Happold co-op from Jan 2027, stack, patent, links." width="72%"/>
 </p>
 
 Designed a fire suppression system with heat-based leak detection during an internship (NDA, company not disclosed); the parent company filed a patent on it.

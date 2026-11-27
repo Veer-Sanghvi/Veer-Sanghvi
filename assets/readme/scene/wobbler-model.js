@@ -1,152 +1,184 @@
-// Procedural wobbler engine, modelled in inches from the dimensions in the
-// machining reports (README): flywheel OD 1.9561 with a 1.0012 hub, crank disk
-// 0.95 OD x 0.22 thick, cylinder 1.526 long with a 0.2510 bore, cylinder plate
-// 2.8127 long, brass piston with a 0.136 cross hole, 1/4-28 UNF air coupling.
-// Everything else (base, pads, boss sizes, crank throw) is a visual guess and
-// is not called out anywhere. Not a copy of the course drawings.
+// High-Speed Wobbler Engine, laid out as the engine is built: a flat sand-cast
+// 6061 base with a raised border and cast pads; the cylinder plate (the port
+// bar) lying along the base on a raised pad with its long axis horizontal; the
+// 6061 cylinder flat beside the plate, rocking on a spring-preloaded trunnion
+// stud that passes horizontally through the plate; a brass piston rod running
+// parallel to the base to the crank pin; the crankshaft through the plate near
+// one end, crank disk on the cylinder side, flywheel on the far side
+// overhanging the base edge. Proportions follow the as-built engine but the
+// part drawings are course material, so nothing here is published as a
+// dimension; the pivot-to-crank distance is schematic.
 //
-// Layout follows the engine as built: the cylinder plate lies along the base
-// with its long axis horizontal, the cylinder flat beside it, the crankshaft
-// and trunnion stud through the plate horizontally, spring and flywheel on the
-// far side overhanging the base edge. The mechanism is modelled in a plate
-// frame (crank axis z, pivot along +y from the crank) and laid down with a
-// quarter turn about z.
+// The mechanism is modelled in a plate-local frame (crank axis z, pivot along
+// +y from the crank) and that frame is laid down on the base by rotating it a
+// quarter turn about z, so the kinematics stay a planar crank-and-rocker.
 import * as THREE from "three";
-import { grainTexture } from "./annotate.js";
+import { mat, box, cyl, hexBolt, LIME } from "./studio-parts.js";
 
-export function buildWobbler(crankDeg = 62) {
-  const g = new THREE.Group();
-  const brushed = grainTexture(11, 1, 170, 85); brushed.repeat.set(1, 24);
-  const castGrain = grainTexture(5, 5, 120, 120); castGrain.colorSpace = THREE.SRGBColorSpace;
-  const alu = new THREE.MeshStandardMaterial({ color: 0xb8b9bc, metalness: 0.92, roughness: 0.38, roughnessMap: brushed, envMapIntensity: 1.0 });
-  const aluFlat = new THREE.MeshStandardMaterial({ color: 0xa9aaad, metalness: 0.9, roughness: 0.44, envMapIntensity: 0.9 });
-  const aluBright = new THREE.MeshStandardMaterial({ color: 0xd4d5d8, metalness: 0.9, roughness: 0.3, roughnessMap: brushed, envMapIntensity: 1.1 });   // freshly milled cylinder, lighter than the plate
-  // sand-cast 6061 as it left the mould: light grey, matte, grainy; the faced border, pads and edges are brighter and smoother
-  const cast = new THREE.MeshStandardMaterial({ color: 0xbfc1c5, map: castGrain, metalness: 0.25, roughness: 1.0, bumpMap: castGrain, bumpScale: 0.08, envMapIntensity: 0.45 });
-  const milled = new THREE.MeshStandardMaterial({ color: 0xc9cbcf, metalness: 0.8, roughness: 0.42, roughnessMap: brushed, envMapIntensity: 0.9 });
-  const brass = new THREE.MeshStandardMaterial({ color: 0xd2a84c, metalness: 1.0, roughness: 0.28, envMapIntensity: 1.1 });
-  const steel = new THREE.MeshStandardMaterial({ color: 0x3b3c40, metalness: 0.9, roughness: 0.38, envMapIntensity: 0.9 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x0a0a0b, roughness: 0.9 });
-  const tube = new THREE.MeshPhysicalMaterial({ color: 0x23262b, metalness: 0, roughness: 0.3, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: 0.7 });
+export const RPM_BENCH = 2340, PLAYBACK = 1 / 40;
+const C = new THREE.Vector3(0, 1.7, 0);            // crankshaft centre (plate frame)
+const PIVOT_D = 1.3;                               // trunnion beyond the crank along the plate
+const P = new THREE.Vector3(0, C.y + PIVOT_D, 0);  // trunnion pivot
+const THROW = 0.30, ROD = 1.9, PORT_R = 0.875, PORT_HALF = Math.asin(0.09375 / PORT_R);
+const FACE = 0.1875;                               // plate cylinder-side face z
+const PLATE_W = 1.45, PLATE_Y = [1.1, 4.0];        // plate height, plate extent along its length
+const BASE_L = 4.4, BASE_W = 3.0, BASE_T = 0.5, PAD_H = 0.28;
+const PLATE_Z = -1.1;                              // plate stands toward the back edge of the base
+// plate frame to world: rotation +90 deg about z (plate +y becomes world -x, plate +x becomes world +y)
+const MECH = new THREE.Vector3(2.5, BASE_T + PAD_H + PLATE_W / 2, PLATE_Z);
 
-  const mesh = (parent, geo, mat, pos, rot) => {
-    const m = new THREE.Mesh(geo, mat);
-    if (pos) m.position.set(...pos);
-    if (rot) m.rotation.set(...rot);
-    m.castShadow = m.receiveShadow = true;
-    parent.add(m);
-    return m;
-  };
-
-  // ---- base: sand-cast slab, raised border, three small pads, one long pad, a milled pad under the plate ----
-  const BASE_L = 4.4, BASE_W = 3.0, BASE_T = 0.5, RIM = 0.18, RIM_H = 0.07, PAD_H = 0.28, PLATE_Z = -1.1;
-  mesh(g, new THREE.BoxGeometry(BASE_L, BASE_T, BASE_W), [milled, milled, cast, cast, milled, milled], [0, BASE_T / 2, 0]);
-  [[0, BASE_W / 2 - RIM / 2, BASE_L, RIM], [0, -BASE_W / 2 + RIM / 2, BASE_L, RIM], [BASE_L / 2 - RIM / 2, 0, RIM, BASE_W], [-BASE_L / 2 + RIM / 2, 0, RIM, BASE_W]]
-    .forEach(([x, z, l, w]) => mesh(g, new THREE.BoxGeometry(l, RIM_H, w), milled, [x, BASE_T + RIM_H / 2, z]));
-  const pad = (l, h, w, x, z, mat = milled) => mesh(g, new THREE.BoxGeometry(l, h, w), mat, [x, BASE_T + h / 2, z]);
-  pad(0.42, RIM_H, 1.9, 0.1, -0.3);
-  [-0.9, -0.1, 0.7].forEach((x) => pad(0.56, RIM_H, 0.5, x, 0.55));
-
-  // ---- plate frame: crank at the origin height, pivot 1.3 along +y, laid on the base with a quarter turn ----
-  const PL_L = 2.8127, PL_H = 1.45, PL_T = 0.25, FRONT = PL_T / 2;
-  const crankY = 0.35, pivotY = crankY + 1.3;            // plate-frame positions along the plate
-  const plateMid = PL_L / 2 - 0.2;                        // plate runs from -0.2 (beyond the crank) to PL_L - 0.2
+export function buildWobbler() {
+  const group = new THREE.Group();
+  const parts = [];
+  const anchors = {};
   const mech = new THREE.Group();
   mech.rotation.z = Math.PI / 2;
-  mech.position.set(plateMid - 0.05, BASE_T + PAD_H + PL_H / 2, PLATE_Z);
-  g.add(mech);
-  pad(PL_L + 0.4, PAD_H, 0.6, mech.position.x - plateMid, PLATE_Z, milled);   // the plate sits on this
-  mesh(mech, new THREE.BoxGeometry(PL_H, PL_L, PL_T), alu, [0, plateMid, 0]);
-  // inlet and exhaust ports on the plate face, on the arc the cylinder port sweeps
-  [-0.2, 0.2].forEach((dx) => mesh(mech, new THREE.CylinderGeometry(0.047, 0.047, 0.03, 20), dark, [dx, pivotY + 0.72, FRONT + 0.012], [Math.PI / 2, 0, 0]));
-  // crank bearing boss on the cylinder side of the plate
-  mesh(mech, new THREE.CylinderGeometry(0.32, 0.32, 0.12, 40), alu, [0, crankY, FRONT + 0.06], [Math.PI / 2, 0, 0]);
+  mech.position.copy(MECH);
+  group.add(mech);
+  const add = (obj, ex = [0, 0, 0], parent = mech) => { parent.add(obj); parts.push({ obj, ex: new THREE.Vector3(...ex), home: obj.position.clone() }); return obj; };
+  const mark = (name, obj, local = [0, 0, 0]) => { const m = new THREE.Object3D(); m.position.set(...local); obj.add(m); anchors[name] = m; };
+  const steel = mat.steel(), brass = mat.brass(), alu = mat.alu();
+
+  // ---- base plate, sand cast: the recessed field keeps its grainy as-cast skin; the border, the pads and
+  // the four edges were faced on the mill, so they are brighter and smoother ----
+  const base = new THREE.Group();
+  const castA = mat.cast(), faced = mat.machined();
+  const slab = box(BASE_L, BASE_T, BASE_W, [faced, faced, castA, castA, faced, faced]); slab.position.y = BASE_T / 2; base.add(slab);
+  const RIM = 0.18, RIM_H = 0.07;
+  [[0, BASE_W / 2 - RIM / 2, BASE_L, RIM], [0, -BASE_W / 2 + RIM / 2, BASE_L, RIM], [BASE_L / 2 - RIM / 2, 0, RIM, BASE_W], [-BASE_L / 2 + RIM / 2, 0, RIM, BASE_W]]
+    .forEach(([x, z, l, w]) => { const r = box(l, RIM_H, w, faced); r.position.set(x, BASE_T + RIM_H / 2, z); base.add(r); });
+  const pad = (l, h, w, x, z) => { const p = box(l, h, w, faced); p.position.set(x, BASE_T + h / 2, z); base.add(p); return p; };
+  pad(3.3, PAD_H, 0.62, MECH.x - (PLATE_Y[0] + PLATE_Y[1]) / 2, PLATE_Z);   // the plate sits on this
+  pad(0.42, RIM_H, 1.9, 0.1, -0.3);                                           // long pad
+  [-0.9, -0.1, 0.7].forEach((x) => pad(0.56, RIM_H, 0.5, x, 0.55));          // three small pads
+  add(base, [0, -0.9, 0], group);
+  mark("base", base, [BASE_L / 2 - 0.35, BASE_T / 2, BASE_W / 2 - 0.25]);
+
+  // ---- cylinder plate (the port bar): the two air ports and the crank bearing ----
+  const plate = new THREE.Group();
+  const slabP = box(PLATE_W, PLATE_Y[1] - PLATE_Y[0], 2 * FACE, alu); slabP.position.y = (PLATE_Y[0] + PLATE_Y[1]) / 2; plate.add(slabP);
+  const bearing = cyl(0.32, 0.12, steel, 28); bearing.rotation.x = Math.PI / 2; bearing.position.set(C.x, C.y, FACE + 0.06); plate.add(bearing);
+  const bearingRing = cyl(0.16, 0.14, mat.darkSteel(), 20); bearingRing.rotation.x = Math.PI / 2; bearingRing.position.copy(bearing.position); plate.add(bearingRing);
+  const ports = [1, -1].map((s) => {
+    const m = cyl(0.047, 0.03, mat.lime(), 14);
+    m.material.emissiveIntensity = 0;
+    m.material.color.set(0x0a0a0a);
+    m.rotation.x = Math.PI / 2;
+    m.position.set(-s * PORT_R * Math.sin(PORT_HALF), P.y + PORT_R * Math.cos(PORT_HALF), FACE + 0.01);
+    plate.add(m); return m;
+  });
+  add(plate);
+  mark("ports", ports[1], [0, 0, 0]);
+  mark("bearing", bearing, [0.32, 0, 0]);
+  // air inlet fitting on the far side of the plate behind the intake port, supply line dropping off the back of the base
+  const fitting = new THREE.Group();
+  const hex = cyl(0.12, 0.22, brass, 6); hex.rotation.x = Math.PI / 2; fitting.add(hex);
+  const barb = cyl(0.07, 0.3, brass, 12); barb.rotation.x = Math.PI / 2; barb.position.z = -0.25; fitting.add(barb);
+  const hose = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0, -0.35), new THREE.Vector3(-0.15, 0.1, -0.8), new THREE.Vector3(-0.8, 0.5, -1.4), new THREE.Vector3(-1.42, 1.1, -2.4)]), 16, 0.075, 7), mat.plastic(0x2B2B2E)); fitting.add(hose);
+  fitting.position.set(ports[0].position.x, ports[0].position.y, -FACE - 0.11);
+  add(fitting, [0, 0, -0.7]);
 
   // ---- crankshaft, crank disk, crank pin ----
-  const DISK_R = 0.95 / 2, DISK_T = 0.22, THROW = 0.4;
-  mesh(mech, new THREE.CylinderGeometry(0.125, 0.125, 2.0, 24), aluFlat, [0, crankY, FRONT + 0.3 - 1.0 + 0.1], [Math.PI / 2, 0, 0]);
-  const diskZ = FRONT + 0.12 + 0.06 + DISK_T / 2;
-  mesh(mech, new THREE.CylinderGeometry(DISK_R, DISK_R, DISK_T, 48), alu, [0, crankY, diskZ], [Math.PI / 2, 0, 0]);
-  mesh(mech, new THREE.CylinderGeometry(0.375, 0.375, 0.02, 48), aluFlat, [0, crankY, diskZ + DISK_T / 2 + 0.01], [Math.PI / 2, 0, 0]);
-  const phi = (crankDeg * Math.PI) / 180;
-  const pin = new THREE.Vector3(THROW * Math.cos(phi), crankY + THROW * Math.sin(phi), diskZ + DISK_T / 2);
-  mesh(mech, new THREE.CylinderGeometry(0.062, 0.062, 0.6, 20), steel, [pin.x, pin.y, pin.z + 0.25], [Math.PI / 2, 0, 0]);
+  const shaft = cyl(0.125, 1.5, steel, 20); shaft.rotation.x = Math.PI / 2; shaft.position.set(C.x, C.y, -0.2); add(shaft, [0, 0, 0.5]);
+  const crank = new THREE.Group();
+  const disk = cyl(0.475, 0.22, alu, 40); disk.rotation.x = Math.PI / 2; crank.add(disk);
+  const pin = cyl(0.062, 0.5, steel, 14); pin.rotation.x = Math.PI / 2; pin.position.set(0, THROW, 0.36); crank.add(pin);
+  const setScrew = hexBolt(0.05, 0.06); setScrew.position.set(0, 0.475, 0); crank.add(setScrew);
+  const crankG = new THREE.Group(); crankG.add(crank);
+  crankG.position.set(C.x, C.y, FACE + 0.06 + 0.11 + 0.08);
+  add(crankG, [0, 0, 1.0]);
+  mark("crank", crankG, [-0.475 * 0.7, -0.475 * 0.7, 0]);
+  mark("pin", pin, [0, 0, 0.25]);
+  mark("crankC", crankG, [0, 0, 0.5]);
 
-  // ---- cylinder: trunnion-pivoted block, bore on its axis, open end toward the crank ----
-  const CYL_L = 1.526, CYL_W = 0.8, CYL_D = 0.62;
-  const cylZ = pin.z + 0.34;
-  const pivot = new THREE.Vector3(0, pivotY, cylZ);
-  const axis = new THREE.Vector3(pin.x - pivot.x, pin.y - pivot.y, 0);
-  const dPin = axis.length(); axis.normalize();
-  const theta = Math.atan2(axis.x, -axis.y); // tilt from the plate line
-  const cyl = new THREE.Group();
-  cyl.position.copy(pivot);
-  cyl.rotation.z = -theta;
-  mech.add(cyl);
-  const TOP = 0.95; // cylinder extends 0.95 beyond the pivot (the port end), the rest toward the crank
-  mesh(cyl, new THREE.BoxGeometry(CYL_W, CYL_L, CYL_D), aluBright, [0, TOP - CYL_L / 2, 0]);
-  mesh(cyl, new THREE.CylinderGeometry(0.1255, 0.1255, 0.02, 32), dark, [0, TOP - CYL_L - 0.005, 0]);
-  // trunnion stud through the cylinder and the plate, spring and hex nut on the far side
-  const studL = cylZ + 0.95;
-  mesh(cyl, new THREE.CylinderGeometry(0.1245, 0.1245, studL, 24), aluFlat, [0, 0, CYL_D / 2 - studL / 2], [Math.PI / 2, 0, 0]);
-  const springPts = [];
-  for (let i = 0; i <= 160; i++) { const t = i / 160; springPts.push(new THREE.Vector3(0.16 * Math.cos(t * Math.PI * 14), 0.16 * Math.sin(t * Math.PI * 14), -FRONT - 0.05 - t * 0.45 - cylZ)); }
-  mesh(cyl, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(springPts), 400, 0.022, 10, false), steel);
-  mesh(cyl, new THREE.CylinderGeometry(0.19, 0.19, 0.12, 6), steel, [0, 0, -FRONT - 0.58 - cylZ], [Math.PI / 2, 0, 0]);
-  // brass piston: rides in the bore, open-end carries the 0.136 cross hole on the crank pin
-  const PISTON_L = 1.55;
-  mesh(cyl, new THREE.CylinderGeometry(0.125, 0.125, PISTON_L, 32), brass, [0, -dPin + PISTON_L / 2, 0]);
-  mesh(cyl, new THREE.CylinderGeometry(0.068, 0.068, 0.3, 20), dark, [0, -dPin, 0], [Math.PI / 2, 0, 0]);
+  // ---- flywheel on the far side, overhanging the base edge ----
+  const fly = new THREE.Group();
+  const rim = cyl(0.975, 0.45, steel, 56); rim.rotation.x = Math.PI / 2; fly.add(rim);
+  const groove = cyl(0.84, 0.47, mat.darkSteel(), 56); groove.rotation.x = Math.PI / 2; fly.add(groove);
+  const web = cyl(0.78, 0.2, steel, 56); web.rotation.x = Math.PI / 2; fly.add(web);
+  const hub = cyl(0.3, 0.62, steel, 24); hub.rotation.x = Math.PI / 2; fly.add(hub);
+  for (let i = 0; i < 5; i++) { const h = cyl(0.14, 0.24, mat.plastic(0x0b0b0c), 16); h.rotation.x = Math.PI / 2; const a = (i / 5) * Math.PI * 2; h.position.set(Math.cos(a) * 0.55, Math.sin(a) * 0.55, 0); fly.add(h); }
+  const grub = hexBolt(0.05, 0.08); grub.position.set(0, 0.3, 0); fly.add(grub);
+  const flyG = new THREE.Group(); flyG.add(fly);
+  flyG.position.set(C.x, C.y, -FACE - 0.1 - 0.225);
+  add(flyG, [0, 0, -1.2]);
+  mark("flywheel", flyG, [0.975 * Math.cos(-0.6), 0.975 * Math.sin(-0.6), 0]);
 
-  // ---- flywheel on the far side of the plate: rim, web, hub, set screw ----
-  const FW_R = 1.9561 / 2, HUB_R = 1.0012 / 2;
-  const prof = [
-    new THREE.Vector2(0.1255, 0), new THREE.Vector2(HUB_R, 0), new THREE.Vector2(HUB_R, 0.42),
-    new THREE.Vector2(HUB_R - 0.08, 0.42), new THREE.Vector2(FW_R - 0.3, 0.42), new THREE.Vector2(FW_R - 0.3, 0.58),
-    new THREE.Vector2(FW_R - 0.03, 0.58), new THREE.Vector2(FW_R, 0.55), new THREE.Vector2(FW_R, 0.03), new THREE.Vector2(FW_R - 0.03, 0),
-    new THREE.Vector2(FW_R - 0.3, 0), new THREE.Vector2(FW_R - 0.3, 0.16), new THREE.Vector2(HUB_R + 0.0, 0.16), new THREE.Vector2(HUB_R, 0.0),
-  ];
-  const fwZ = -FRONT - 0.12;
-  mesh(mech, new THREE.LatheGeometry(prof, 72), alu, [0, crankY, fwZ], [-Math.PI / 2, 0, 0]); // profile y runs toward -z
-  mesh(mech, new THREE.CylinderGeometry(0.22, 0.22, 0.1, 32), aluFlat, [0, crankY, fwZ + 0.06], [Math.PI / 2, 0, 0]);
-  // hub set screw, radial
-  const ss = new THREE.Group();
-  mesh(ss, new THREE.CylinderGeometry(0.07, 0.07, 0.08, 32), steel, [0, 0.04, 0]);
-  mesh(ss, new THREE.CylinderGeometry(0.035, 0.035, 0.04, 6), dark, [0, 0.062, 0]);
-  ss.position.set(0, crankY + HUB_R, fwZ - 0.3); mech.add(ss);
+  // ---- cylinder: a bar with a real bore, extruded from a 2D section so the cutaway shows the wall ----
+  const cylG = new THREE.Group();
+  const sec = new THREE.Shape();
+  sec.moveTo(-0.375, -0.31); sec.lineTo(0.375, -0.31); sec.lineTo(0.375, 0.31); sec.lineTo(-0.375, 0.31); sec.closePath();
+  const bore = new THREE.Path(); bore.absarc(0, 0, 0.1255, 0, Math.PI * 2, true); sec.holes.push(bore);
+  const cylMat = mat.alu(); cylMat.side = THREE.DoubleSide;
+  const cutPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), PLATE_Z + FACE + 0.31);   // world space: keeps the plate-side half when enabled
+  const wall = new THREE.Mesh(new THREE.ExtrudeGeometry(sec, { depth: 1.25, bevelEnabled: false, curveSegments: 24 }), cylMat);
+  wall.rotation.x = -Math.PI / 2; wall.position.y = -0.25;   // bore runs from the open end (-0.25) up 1.25 in
+  wall.castShadow = true; wall.receiveShadow = true;
+  const cap = box(0.75, 0.55, 0.62, cylMat); cap.position.y = 1.0 + 0.275;      // closed end, 0.55 in of wall above the bore
+  cap.castShadow = true;
+  const port = cyl(0.047, 0.2, mat.lime(), 12); port.rotation.x = Math.PI / 2; port.position.set(0, PORT_R, -0.22);
+  cylG.add(wall, cap, port);
+  cylG.position.set(P.x, P.y, FACE + 0.31);
+  add(cylG, [0, 0.4, 1.5]);
+  mark("cylinder", cylG, [0.375, 1.1, 0.1]);
+  mark("port", port, [0, 0, -0.1]);
+  // trunnion stud through the cylinder and the plate, spring preload and nut on the far side
+  const stud = cyl(0.095, 1.3, steel, 14); stud.rotation.x = Math.PI / 2; stud.position.set(P.x, P.y, -0.15); add(stud, [0, 0, -2.3]);
+  const spring = new THREE.Group();
+  const helix = []; for (let i = 0; i <= 48; i++) { const t = i / 48; helix.push(new THREE.Vector3(Math.cos(t * Math.PI * 12) * 0.15, Math.sin(t * Math.PI * 12) * 0.15, -t * 0.26)); }
+  spring.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(helix), 96, 0.022, 5), steel));
+  const nut = hexBolt(0.14, 0.1); nut.rotation.x = -Math.PI / 2; nut.position.z = -0.3; spring.add(nut);
+  spring.position.set(P.x, P.y, -FACE - 0.05);
+  add(spring, [0, 0, -2.4]);
+  mark("trunnion", spring, [0, 0.14, -0.3]);
 
-  // ---- 1/4-28 UNF air coupling on the far side of the plate, plastic supply tube off the back of the base ----
-  const cpl = new THREE.Vector3(-0.2, pivotY + 0.72, -FRONT);
-  mesh(mech, new THREE.CylinderGeometry(0.16, 0.16, 0.18, 6), alu, [cpl.x, cpl.y, cpl.z - 0.09], [Math.PI / 2, 0, 0]);
-  mesh(mech, new THREE.CylinderGeometry(0.1, 0.1, 0.3, 24), aluFlat, [cpl.x, cpl.y, cpl.z - 0.3], [Math.PI / 2, 0, 0]);
-  // plate-frame -x is world down, +y is world toward the pivot end of the base
-  const tubeCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(cpl.x, cpl.y, cpl.z - 0.4),
-    new THREE.Vector3(cpl.x - 0.2, cpl.y + 0.1, cpl.z - 0.9),
-    new THREE.Vector3(cpl.x - 0.9, cpl.y + 0.5, cpl.z - 1.4),
-    new THREE.Vector3(cpl.x - 1.25, cpl.y + 1.3, cpl.z - 2.6),
-  ]);
-  mesh(mech, new THREE.TubeGeometry(tubeCurve, 80, 0.075, 16, false), tube);
+  // ---- brass piston rod, from the crank pin into the bore ----
+  const rodG = new THREE.Group();
+  const rod = cyl(0.125, ROD, brass, 20); rod.position.y = ROD / 2; rodG.add(rod);
+  const eye = cyl(0.2, 0.2, brass, 20); eye.rotation.x = Math.PI / 2; rodG.add(eye);
+  add(rodG, [0.7, 0, 1.6]);
+  mark("rod", rod, [0.125, -0.2, 0]);
+  mark("rodA", rod, [0, -ROD / 2, 0]);
+  mark("rodB", rod, [0, ROD / 2, 0]);
 
-  // world-space anchors for the overlay (group space = world), converted out of the plate frame
-  mech.updateMatrix();
-  const W = (v) => v.applyMatrix4(mech.matrix);
-  const inCyl = (x, y, z) => new THREE.Vector3(x, y, z).applyEuler(cyl.rotation).add(pivot);
-  const crankC = W(new THREE.Vector3(0, crankY, fwZ));
-  return {
-    group: g,
-    anchors: {
-      flywheel: W(new THREE.Vector3(FW_R * 0.6, crankY - FW_R * 0.75, fwZ - 0.58)),
-      hub: W(new THREE.Vector3(HUB_R, crankY, fwZ - 0.42)),
-      crank: W(new THREE.Vector3(-DISK_R * 0.6, crankY - DISK_R * 0.5, diskZ + DISK_T / 2)),
-      pin: W(pin.clone().add(new THREE.Vector3(0.062, 0, 0.5))),
-      cylinder: W(inCyl(-0.22, TOP - CYL_L + 0.2, CYL_D / 2)),   // front face, low, near the open end: clear of the crank and piston leaders
-      piston: W(inCyl(0.125, -dPin + 0.55, 0)),
-      pivot: W(new THREE.Vector3(0, pivotY, -FRONT - 0.58 - 0.06)),
-      plate: W(new THREE.Vector3(PL_H / 2, PL_L - 0.55, 0)),
-      base: new THREE.Vector3(BASE_L / 2 - 0.3, BASE_T / 2, BASE_W / 2),
-      coupling: W(new THREE.Vector3(cpl.x, cpl.y, cpl.z - 0.3)),
+  const state = { phi: 0.6, explode: 0, explodeTarget: 0, cut: false };
+  const omega = (RPM_BENCH * PLAYBACK * Math.PI * 2) / 60;
+  const d = new THREE.Vector3();
+
+  function pose(phi) {
+    const pinW = new THREE.Vector3(C.x + THROW * Math.sin(phi), C.y + THROW * Math.cos(phi), 0);
+    crank.rotation.z = -phi;
+    fly.rotation.z = -phi;
+    d.copy(pinW).sub(P); const dist = d.length(); d.normalize();
+    const beta = Math.atan2(d.x, -d.y);
+    cylG.rotation.z = beta;
+    rodG.rotation.z = beta;
+    rodG.position.set(pinW.x, pinW.y, FACE + 0.31);
+    // port overlap: each plate port lights as the cylinder port sweeps across it
+    const open = [1, -1].map((s) => Math.max(0, 1 - Math.abs(beta - s * PORT_HALF) / PORT_HALF));
+    ports.forEach((m, k) => { m.material.emissiveIntensity = open[k] * 0.9; m.material.color.setHex(open[k] > 0.05 ? LIME : 0x0a0a0a); });
+    const stateName = beta < -0.006 ? "exhaust open" : beta > 0.006 ? "intake open" : "both sealed";
+    return { beta, dist, stateName, extension: ROD - dist };
+  }
+
+  const model = {
+    group,
+    anchor(name) { return anchors[name].getWorldPosition(new THREE.Vector3()); },
+    setExploded(on) { state.explodeTarget = on ? 1 : 0; },
+    setCutaway(on) { state.cut = on; cylMat.clippingPlanes = on ? [cutPlane] : null; cylMat.needsUpdate = true; },
+    onReadout: null,
+    tick(dt, t, animate, snap) {
+      let busy = false;
+      if (animate) { state.phi = (state.phi + omega * dt) % (Math.PI * 2); busy = true; }
+      const k = snap ? 1 : 1 - Math.pow(0.02, dt);
+      if (Math.abs(state.explode - state.explodeTarget) > 0.002) { state.explode += (state.explodeTarget - state.explode) * k; busy = true; } else state.explode = state.explodeTarget;
+      const info = pose(state.phi);
+      const e = state.explode < 0.5 ? 2 * state.explode * state.explode : 1 - Math.pow(-2 * state.explode + 2, 2) / 2;
+      parts.forEach((p) => { if (p.obj !== rodG) p.obj.position.copy(p.home); p.obj.position.addScaledVector(p.ex, e); });
+      cutPlane.constant = PLATE_Z + cylG.position.z;   // the cut follows the cylinder out in the exploded view
+      if (model.onReadout) model.onReadout(state.phi, info);
+      return busy;
     },
-    crankC, fwZ: crankC.z, crankY: crankC.y,
   };
+  return model;
 }

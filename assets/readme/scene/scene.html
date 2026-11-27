@@ -4,7 +4,7 @@
      Three of the projects on one studio floor: the IQCR ABB IRB 120 arm
      (arm-model.js + kinematics.js, copied from the IQCR repo), the HEFP
      exhaust manifold (hefp-model.js) and the wobbler engine
-     (wobbler-model.js, modelled in inches from the machining reports). -->
+     (wobbler-model.js, the portfolio wobbler-3d model, laid flat as built). -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -84,7 +84,8 @@ portGlow.position.set(-3.4, 2.7, 1.2);
 scene.add(portGlow);
 
 // wobbler engine on the right
-const eng = buildWobbler(62);
+const eng = buildWobbler();
+eng.tick(0, 0, false, true);
 const engRig = new THREE.Group();
 engRig.add(eng.group);
 engRig.scale.setScalar(0.86);
@@ -105,7 +106,7 @@ const armPts = jointAnchors(frames);
 // one short label per object, placed beside it: above the manifold, below the arm, right of the engine
 leader(svg, tags, P(man.group, man.anchors.port), 520, 120, `HEFP &middot; <b>hot-surface ignition model</b>`, "above");
 leader(svg, tags, P(armRig, new THREE.Vector3(-120, 0, 60)), 650, 306, `IQCR &middot; <b>six-axis inspection arm</b>`, "below");
-leader(svg, tags, P(eng.group, eng.anchors.cylinder), 1256, 213, `WOBBLER &middot; <b>2,340 RPM</b>`, "left");
+leader(svg, tags, project(eng.anchor("cylinder"), camera), 1256, 213, `WOBBLER &middot; <b>2,340 RPM</b>`, "left");
 
 renderer.render(scene, camera);
 document.body.dataset.ready = "1";
