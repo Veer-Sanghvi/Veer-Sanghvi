@@ -17,12 +17,13 @@ import { grainTexture } from "./annotate.js";
 export function buildWobbler(crankDeg = 62) {
   const g = new THREE.Group();
   const brushed = grainTexture(11, 1, 170, 85); brushed.repeat.set(1, 24);
-  const castGrain = grainTexture(5, 4, 120, 135);
+  const castGrain = grainTexture(5, 5, 120, 120); castGrain.colorSpace = THREE.SRGBColorSpace;
   const alu = new THREE.MeshStandardMaterial({ color: 0xb8b9bc, metalness: 0.92, roughness: 0.38, roughnessMap: brushed, envMapIntensity: 1.0 });
   const aluFlat = new THREE.MeshStandardMaterial({ color: 0xa9aaad, metalness: 0.9, roughness: 0.44, envMapIntensity: 0.9 });
   const aluBright = new THREE.MeshStandardMaterial({ color: 0xd4d5d8, metalness: 0.9, roughness: 0.3, roughnessMap: brushed, envMapIntensity: 1.1 });   // freshly milled cylinder, lighter than the plate
-  const cast = new THREE.MeshStandardMaterial({ color: 0x55565a, metalness: 0.3, roughness: 0.9, bumpMap: castGrain, bumpScale: 0.02, roughnessMap: castGrain, envMapIntensity: 0.25 });
-  const milled = new THREE.MeshStandardMaterial({ color: 0x85868a, metalness: 0.5, roughness: 0.56, roughnessMap: brushed, envMapIntensity: 0.45 });
+  // sand-cast 6061 as it left the mould: light grey, matte, grainy; the faced border, pads and edges are brighter and smoother
+  const cast = new THREE.MeshStandardMaterial({ color: 0xbfc1c5, map: castGrain, metalness: 0.25, roughness: 1.0, bumpMap: castGrain, bumpScale: 0.08, envMapIntensity: 0.45 });
+  const milled = new THREE.MeshStandardMaterial({ color: 0xc9cbcf, metalness: 0.8, roughness: 0.42, roughnessMap: brushed, envMapIntensity: 0.9 });
   const brass = new THREE.MeshStandardMaterial({ color: 0xd2a84c, metalness: 1.0, roughness: 0.28, envMapIntensity: 1.1 });
   const steel = new THREE.MeshStandardMaterial({ color: 0x3b3c40, metalness: 0.9, roughness: 0.38, envMapIntensity: 0.9 });
   const dark = new THREE.MeshStandardMaterial({ color: 0x0a0a0b, roughness: 0.9 });
@@ -39,10 +40,10 @@ export function buildWobbler(crankDeg = 62) {
 
   // ---- base: sand-cast slab, raised border, three small pads, one long pad, a milled pad under the plate ----
   const BASE_L = 4.4, BASE_W = 3.0, BASE_T = 0.5, RIM = 0.18, RIM_H = 0.07, PAD_H = 0.28, PLATE_Z = -1.1;
-  mesh(g, new THREE.BoxGeometry(BASE_L, BASE_T, BASE_W), cast, [0, BASE_T / 2, 0]);
+  mesh(g, new THREE.BoxGeometry(BASE_L, BASE_T, BASE_W), [milled, milled, cast, cast, milled, milled], [0, BASE_T / 2, 0]);
   [[0, BASE_W / 2 - RIM / 2, BASE_L, RIM], [0, -BASE_W / 2 + RIM / 2, BASE_L, RIM], [BASE_L / 2 - RIM / 2, 0, RIM, BASE_W], [-BASE_L / 2 + RIM / 2, 0, RIM, BASE_W]]
-    .forEach(([x, z, l, w]) => mesh(g, new THREE.BoxGeometry(l, RIM_H, w), cast, [x, BASE_T + RIM_H / 2, z]));
-  const pad = (l, h, w, x, z, mat = cast) => mesh(g, new THREE.BoxGeometry(l, h, w), mat, [x, BASE_T + h / 2, z]);
+    .forEach(([x, z, l, w]) => mesh(g, new THREE.BoxGeometry(l, RIM_H, w), milled, [x, BASE_T + RIM_H / 2, z]));
+  const pad = (l, h, w, x, z, mat = milled) => mesh(g, new THREE.BoxGeometry(l, h, w), mat, [x, BASE_T + h / 2, z]);
   pad(0.42, RIM_H, 1.9, 0.1, -0.3);
   [-0.9, -0.1, 0.7].forEach((x) => pad(0.56, RIM_H, 0.5, x, 0.55));
 
@@ -139,7 +140,7 @@ export function buildWobbler(crankDeg = 62) {
       hub: W(new THREE.Vector3(HUB_R, crankY, fwZ - 0.42)),
       crank: W(new THREE.Vector3(-DISK_R * 0.6, crankY - DISK_R * 0.5, diskZ + DISK_T / 2)),
       pin: W(pin.clone().add(new THREE.Vector3(0.062, 0, 0.5))),
-      cylinder: W(inCyl(CYL_W / 2, TOP - CYL_L / 2 + 0.2, 0.1)),
+      cylinder: W(inCyl(0.1, TOP - CYL_L + 0.32, CYL_D / 2)),   // front face, low, near the open end: clear of the crank and piston leaders
       piston: W(inCyl(0.125, -dPin + 0.55, 0)),
       pivot: W(new THREE.Vector3(0, pivotY, -FRONT - 0.58 - 0.06)),
       plate: W(new THREE.Vector3(PL_H / 2, PL_L - 0.55, 0)),

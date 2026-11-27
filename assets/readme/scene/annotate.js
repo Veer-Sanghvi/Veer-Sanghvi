@@ -92,8 +92,8 @@ export function leader(svg, tagsHost, anchor, tx, ty, html, side = "right") {
   tagsHost.appendChild(tag);
   const r = tag.getBoundingClientRect();
   let left = tx, top = ty - r.height / 2, x1, y1 = ty;
-  if (side === "left") { left = tx - r.width; x1 = left + r.width + 5; }
-  else if (side === "right") { x1 = left - 5; }
+  if (side === "left") left = tx - r.width;
+  if (side === "left" || side === "right") x1 = anchor[0] > left + r.width / 2 ? left + r.width + 5 : left - 5;   // leave from the edge that faces the anchor
   else { left = tx - r.width / 2; top = side === "above" ? ty - r.height : ty; x1 = tx; y1 = side === "above" ? ty + 5 : ty - 5; }
   tag.style.left = left + "px"; tag.style.top = top + "px";
   el("line", { x1, y1, x2: anchor[0], y2: anchor[1], class: "leader" }, svg);
