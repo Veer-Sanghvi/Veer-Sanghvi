@@ -140,7 +140,7 @@ export function buildWobbler(crankDeg = 62) {
       hub: W(new THREE.Vector3(HUB_R, crankY, fwZ - 0.42)),
       crank: W(new THREE.Vector3(-DISK_R * 0.6, crankY - DISK_R * 0.5, diskZ + DISK_T / 2)),
       pin: W(pin.clone().add(new THREE.Vector3(0.062, 0, 0.5))),
-      cylinder: W(inCyl(0.1, TOP - CYL_L + 0.32, CYL_D / 2)),   // front face, low, near the open end: clear of the crank and piston leaders
+      cylinder: W(inCyl(-0.22, TOP - CYL_L + 0.2, CYL_D / 2)),   // front face, low, near the open end: clear of the crank and piston leaders
       piston: W(inCyl(0.125, -dPin + 0.55, 0)),
       pivot: W(new THREE.Vector3(0, pivotY, -FRONT - 0.58 - 0.06)),
       plate: W(new THREE.Vector3(PL_H / 2, PL_L - 0.55, 0)),
